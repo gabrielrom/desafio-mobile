@@ -84,7 +84,6 @@ export default function App() {
                   name="delete" 
                   size={25} 
                   color="#900" 
-                  style={styles.iconDelete} 
                   onPress={() => handleRemoveRepository(repository.id)}
                 />
               </View>
@@ -217,7 +216,8 @@ const styles = StyleSheet.create({
 
   iconEmpty: {
     alignSelf: 'center',
-    marginTop: 260
+    marginTop: 260,
+    
   }
 
 });
