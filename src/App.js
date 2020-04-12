@@ -62,17 +62,31 @@ export default function App() {
         <FlatList
           data={repositories}
           keyExtractor={repository => repository.id}
+          ListEmptyComponent={(
+            <>
+              <Icon
+                name="rocket1"
+                size={90}
+                color="#FFF"
+                style={styles.iconEmpty}
+              />
+              <View style={styles.listEmpty}>
+                <Text style={styles.emptyText}>A sua lista de repositórios está vazia</Text>
+              </View>
+            </>
+          )}
           renderItem={({ item: repository }) => (
             <View style={styles.repositoryContainer}>
 
               <View style={styles.headerDelete}>
                 <Text style={styles.repository}>{repository.title}</Text>
                 <Icon 
-                name="delete" 
-                size={25} 
-                color="#900" 
-                style={styles.iconDelete} 
-                onPress={() => handleRemoveRepository(repository.id)}/>
+                  name="delete" 
+                  size={25} 
+                  color="#900" 
+                  style={styles.iconDelete} 
+                  onPress={() => handleRemoveRepository(repository.id)}
+                />
               </View>
               
               <View style={styles.techsContainer}>
@@ -188,5 +202,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
     marginRight: 10
+  },
+
+  listEmpty:{
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 50,
+  },
+
+  emptyText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  iconEmpty: {
+    alignSelf: 'center',
+    marginTop: 260
   }
+
 });
