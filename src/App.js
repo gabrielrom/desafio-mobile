@@ -198,10 +198,9 @@ const styles = StyleSheet.create({
 
   headerDelete: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10
+    marginRight: 20
   },
 
   listEmpty:{
