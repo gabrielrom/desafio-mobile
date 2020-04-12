@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import api from './services/api';
+import Icon from 'react-native-vector-icons/AntDesign';
 import {
   SafeAreaView,
   View,
@@ -9,6 +10,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  
 } from "react-native";
 
 export default function App() {
@@ -32,21 +34,50 @@ export default function App() {
 
   }
 
+  async function handleAddRepository(){
+    const response = await api.post('/repositories', {
+      title: `Novo repositorio ${Date.now()}`,
+      url: 'https://github.com/gabrielrom/desafio-conceitos-node',
+      techs: 'React Native, NodeJS, Express'
+    });
+
+    const repository = response.data;
+
+    setRepositories([...repositories, repository]);
+  }
+
+  async function handleRemoveRepository(id){
+    await api.delete(`/repositories/${id}`);
+
+    const repositoryIndex = repositories.findIndex(repository => repository.id === id); 
+    repositories.splice(repositoryIndex, 1);
+
+    setRepositories([...repositories]);
+  }
+
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
       <SafeAreaView style={styles.container}>
-        <FlatList 
+        <FlatList
           data={repositories}
           keyExtractor={repository => repository.id}
           renderItem={({ item: repository }) => (
             <View style={styles.repositoryContainer}>
 
-              <Text style={styles.repository}>{repository.title}</Text>
-
+              <View style={styles.headerDelete}>
+                <Text style={styles.repository}>{repository.title}</Text>
+                <Icon 
+                name="delete" 
+                size={25} 
+                color="#900" 
+                style={styles.iconDelete} 
+                onPress={() => handleRemoveRepository(repository.id)}/>
+              </View>
+              
               <View style={styles.techsContainer}>
                 {repository.techs.map(tech => (
-                  <Text style={styles.tech}>
+                  <Text style={styles.tech} key={tech}>
                     {tech}
                   </Text>
                 ))}
@@ -65,14 +96,23 @@ export default function App() {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => handleLikeRepository(repository.id)}
+                activeOpacity={0.9}
                 // Remember to replace "1" below with repository ID: {`like-button-${repository.id}`}
                 testID={`like-button-${repository.id}`}
               >
                 <Text style={styles.buttonText}>Curtir</Text>
               </TouchableOpacity>
             </View>
-          )}
+          )
+        }
         />
+        <TouchableOpacity 
+          activeOpacity={0.6} 
+          style={styles.buttonAdd}
+          onPress={handleAddRepository}
+        >
+          <Text style={styles.buttonAddText}>Adicionar</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </>
   );
@@ -127,4 +167,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#7159c1",
     padding: 15,
   },
+  buttonAdd: {
+    backgroundColor: '#FFF',
+    margin: 20,
+    height: 50,
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  buttonAddText: {
+    color: '#7159c1',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+
+  headerDelete: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+    marginRight: 10
+  }
 });
